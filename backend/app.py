@@ -75,24 +75,28 @@ def get_current_user_id():
     identity = get_jwt_identity()
     return int(identity)
 
-# Database
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="root",
-    database="db11",
+# ---------------- DATABASE ---------------- #
+conn = mysql.connector.connect(
+    host=os.getenv("DB_HOST", "localhost"),
+    user=os.getenv("DB_USER", "root"),
+    password=os.getenv("DB_PASSWORD", "root"),
+    database=os.getenv("DB_NAME", "db11"),
     charset="utf8",
     collation="utf8_general_ci"
 )
-cursor = db.cursor(dictionary=True)
 
-# ---------------- GLOBAL STATE ---------------- #
+# Alias for compatibility
+db = conn
+cursor = conn.cursor(dictionary=True)
+
+# Memory-optimized: No FAISS or sentence-transformers
+# Using lightweight TF-IDF for job matching instead
 BASE_DIR = Path(__file__).resolve().parent
 JOB_DF = None
 COURSES_DF = None
 
-JOB_INDEX = None
-JOB_EMBS = None
+JOB_VECTORIZER = None  # TF-IDF vectorizer instead of FAISS index
+JOB_TFIDF_MATRIX = None  # Sparse matrix instead of dense embeddings
 
 MODEL_READY = False
 MODEL_ERROR = None
@@ -377,27 +381,30 @@ def progress_callback(done, total):
     MODEL_PROGRESS["loaded"] = done
     MODEL_PROGRESS["total"] = total if total != 0 else 1
 
-# ---------------- BACKGROUND MODEL LOADER ---------------- #
+# Memory-optimized background loader (no FAISS/embeddings)
 def background_load_pipeline():
-    global JOB_INDEX, JOB_EMBS, MODEL_READY, MODEL_ERROR
+    global JOB_VECTORIZER, JOB_TFIDF_MATRIX, MODEL_READY, MODEL_ERROR
 
     try:
-        print("Building job index...")
+        print("Building lightweight TF-IDF job index...")
         job_df = JOB_DF
         if job_df is None:
             raise RuntimeError("Job dataset not loaded")
 
-        print("Building embeddings + FAISS index...")
-        JOB_INDEX, JOB_EMBS = build_job_index(
+        # Returns (vectorizer, tfidf_matrix, job_df) - all lightweight
+        vectorizer, tfidf_matrix, job_df_indexed = build_job_index(
             job_df,
             cache_path=str(BASE_DIR / "data" / "job_embs.npy"),
             progress_callback=progress_callback
         )
 
+        JOB_VECTORIZER = vectorizer
+        JOB_TFIDF_MATRIX = tfidf_matrix
+
         MODEL_READY = True
         MODEL_PROGRESS["loaded"] = MODEL_PROGRESS["total"]
 
-        print("Model ready! FAISS index built successfully.")
+        print("✓ TF-IDF index built successfully (memory-efficient)")
 
     except Exception as e:
         MODEL_ERROR = str(e)
@@ -608,7 +615,7 @@ def analyze_resume():
             }), 200
 
         matched_jobs = find_similar_jobs(
-            text, JOB_DF, JOB_INDEX, JOB_EMBS, topk=5
+            text, JOB_DF, JOB_VECTORIZER, JOB_TFIDF_MATRIX, topk=5
         )
 
         return jsonify({
@@ -648,7 +655,7 @@ def search_jobs():
         if not query or not query.strip():
             return jsonify({"error": "Search query is required"}), 400
 
-        matched_jobs = find_similar_jobs(query, JOB_DF, JOB_INDEX, JOB_EMBS, topk=10)
+        matched_jobs = find_similar_jobs(query, JOB_DF, JOB_VECTORIZER, JOB_TFIDF_MATRIX, topk=10)
 
         return jsonify({
             "status": "success",
