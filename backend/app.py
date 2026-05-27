@@ -76,18 +76,55 @@ def get_current_user_id():
     return int(identity)
 
 # ---------------- DATABASE ---------------- #
-conn = mysql.connector.connect(
-    host=os.getenv("DB_HOST", "localhost"),
-    user=os.getenv("DB_USER", "root"),
-    password=os.getenv("DB_PASSWORD", "root"),
-    database=os.getenv("DB_NAME", "db11"),
-    charset="utf8",
-    collation="utf8_general_ci"
-)
+try:
+    conn = mysql.connector.connect(
+        host=os.getenv("DB_HOST", "localhost"),
+        user=os.getenv("DB_USER", "root"),
+        password=os.getenv("DB_PASSWORD", "root"),
+        database=os.getenv("DB_NAME", "db11"),
+        charset="utf8",
+        collation="utf8_general_ci"
+    )
 
-# Alias for compatibility
-db = conn
-cursor = conn.cursor(dictionary=True)
+    # Alias for compatibility
+    db = conn
+    cursor = conn.cursor(dictionary=True)
+
+except Exception as e:
+    # Fail-open: if DB is not reachable at import time (common during deploy),
+    # create lightweight dummy objects so the app can start and return
+    # graceful errors from endpoints instead of crashing Gunicorn.
+    print("Warning: could not connect to MySQL at startup:", e)
+
+    class _DummyCursor:
+        def execute(self, *args, **kwargs):
+            return None
+
+        def fetchone(self):
+            return None
+
+        def fetchall(self):
+            return []
+
+        def close(self):
+            return None
+
+    class _DummyConn:
+        def cursor(self, *args, **kwargs):
+            return _DummyCursor()
+
+        def commit(self):
+            return None
+
+        def rollback(self):
+            return None
+
+        def close(self):
+            return None
+
+    conn = None
+    db = _DummyConn()
+    cursor = db.cursor()
 
 # Memory-optimized: No FAISS or sentence-transformers
 # Using lightweight TF-IDF for job matching instead

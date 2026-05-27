@@ -3,7 +3,7 @@ services:
     name: smart-competency-backend
     env: python
     region: oregon
-    plan: starter
+    plan: free
     runtime: python-3.11
     buildCommand: pip install -r requirements_optimized.txt
     startCommand: cd backend && gunicorn -w 2 -b 0.0.0.0:$PORT -t 30 app:app
@@ -16,5 +16,5 @@ services:
         value: true
     autoDeploy: true
     healthCheckPath: /
-    previewPlan: starter
-    maxInstances: 2
+    previewPlan: free
+    maxInstances: 1
