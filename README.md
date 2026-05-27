@@ -1,0 +1,1 @@
+# Smart-Competency-Diagnostic-and-Candidate-Profile-Score-Calculator
