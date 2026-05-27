@@ -1,30 +1,21 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
+/* eslint-disable react-refresh/only-export-components */
+import React, { createContext, useState, useContext } from "react";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const savedToken = localStorage.getItem("token");
-    const savedUser = localStorage.getItem("user");
-
-    if (savedToken) {
-      setToken(savedToken);
+  const [user, setUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem('user');
+      return saved ? JSON.parse(saved) : null;
+    } catch (err) {
+      console.error('Failed to parse saved user', err);
+      return null;
     }
+  });
 
-    if (savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-      } catch (err) {
-        console.error("Failed to parse saved user", err);
-      }
-    }
-
-    setLoading(false);
-  }, []);
+  const [token, setToken] = useState(() => localStorage.getItem('token'));
+  const loading = false;
 
   const login = (data) => {
     setUser(data.user);

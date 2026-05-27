@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { API_BASE_URL } from '../config';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import {
 ArrowLeft,
