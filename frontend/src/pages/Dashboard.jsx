@@ -2,6 +2,7 @@ import React, {useEffect , useState} from 'react'
 import { useAuth } from '../context/AuthContext'
 import UploadAndSummary from '../components/UploadAndSummary'
 import { Link } from 'react-router-dom'
+import { API_BASE_URL } from "../config";
 import {
   Award,
   BarChart3,
@@ -88,7 +89,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (!token) return;
 
-    fetch("http://localhost:5000/profile", {
+    fetch(`${API_BASE_URL}/profile`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -99,7 +100,7 @@ const Dashboard = () => {
   // ---------------- CHECK MODEL STATUS ---------------- //
   useEffect(() => {
     const interval = setInterval(() => {
-      fetch("http://localhost:5000/model_status")
+      fetch(`${API_BASE_URL}/model_status`)
         .then((res) => res.json())
         .then((data) => {
           setModelStatus(data.status);

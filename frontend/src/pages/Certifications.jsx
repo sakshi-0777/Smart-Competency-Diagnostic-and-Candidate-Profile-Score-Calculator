@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import {
-  Award,
+import { API_BASE_URL } from "../config";
+Award,
   BadgeCheck,
   BriefcaseBusiness,
   CheckCircle2,
@@ -36,7 +37,7 @@ const Certifications = () => {
   const fetchCertifications = async () => {
     try {
       setError('');
-      const response = await fetch('http://localhost:5000/certifications', {
+      const response = await fetch(`${API_BASE_URL}/certifications`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await response.json();
@@ -52,7 +53,7 @@ const Certifications = () => {
 
   const fetchUserCertifications = async () => {
     try {
-      const response = await fetch('http://localhost:5000/certifications/user', {
+      const response = await fetch(`${API_BASE_URL}/certifications/user`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await response.json();
@@ -69,7 +70,7 @@ const Certifications = () => {
 
   const handleStartQuiz = async (certificationId) => {
     try {
-      const response = await fetch(`http://localhost:5000/certifications/${certificationId}/quiz`, {
+      const response = await fetch(`${API_BASE_URL}/certifications/${certificationId}/quiz`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await response.json();
@@ -95,7 +96,7 @@ const Certifications = () => {
 
   const handleSubmitQuiz = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/certifications/${selectedCertification.id}/quiz/submit`, {
+      const response = await fetch(`${API_BASE_URL}/certifications/${selectedCertification.id}/quiz/submit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -115,7 +116,7 @@ const Certifications = () => {
 
   const handleDownloadCertificate = async (certificationId) => {
     try {
-      const response = await fetch(`http://localhost:5000/certifications/${certificationId}/download`, {
+      const response = await fetch(`${API_BASE_URL}/certifications/${certificationId}/download`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await response.json();

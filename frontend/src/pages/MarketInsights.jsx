@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import {
-  Bell,
+import { API_BASE_URL } from "../config";
+Bell,
   Building2,
   Calendar,
   DollarSign,
@@ -32,7 +33,7 @@ const MarketInsights = () => {
       if (selectedCategory !== 'all') params.append('category', selectedCategory);
       if (selectedLocation !== 'all') params.append('location', selectedLocation);
 
-      const response = await fetch(`http://localhost:5000/market-insights?${params}`, {
+      const response = await fetch(`${API_BASE_URL}/market-insights?${params}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await response.json();

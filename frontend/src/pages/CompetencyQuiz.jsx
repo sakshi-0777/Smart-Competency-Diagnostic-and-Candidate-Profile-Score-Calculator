@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import {
-  ArrowLeft,
+ArrowLeft,
   ArrowRight,
   BarChart3,
   BookOpen,
@@ -34,7 +34,7 @@ const CompetencyQuiz = () => {
   const fetchQuestions = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/quiz/questions', {
+      const response = await fetch(`${API_BASE_URL}/quiz/questions`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (!response.ok) {
@@ -76,7 +76,7 @@ const CompetencyQuiz = () => {
   const handleSubmit = async () => {
     setSubmitting(true);
     try {
-      const response = await fetch('http://localhost:5000/quiz/submit', {
+      const response = await fetch(`${API_BASE_URL}/quiz/submit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

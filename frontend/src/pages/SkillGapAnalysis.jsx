@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import {
-  AlertTriangle,
+AlertTriangle,
   Award,
   BookOpen,
   Briefcase,
@@ -72,7 +72,7 @@ const SkillGapAnalysis = () => {
   useEffect(() => {
     let isMounted = true;
 
-    fetch('http://localhost:5000/skill-analysis/jobs', {
+    fetch(`${API_BASE_URL}/skill-analysis/jobs`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(response => response.json())
@@ -112,7 +112,7 @@ const SkillGapAnalysis = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch('http://localhost:5000/skill-analysis/analyze', {
+      const response = await fetch(`${API_BASE_URL}/skill-analysis/analyze`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

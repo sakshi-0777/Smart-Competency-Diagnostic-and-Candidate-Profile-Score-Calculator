@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import {
-  Bell,
+Bell,
   CheckCircle2,
   Eye,
   Loader2,
@@ -73,7 +73,7 @@ const Settings = () => {
       return;
     }
 
-    fetch('http://localhost:5000/profile', {
+    fetch(`${API_BASE_URL}/profile`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(response => response.json())
@@ -122,7 +122,7 @@ const Settings = () => {
         payload.new_password = passwords.newPassword;
       }
 
-      const response = await fetch('http://localhost:5000/profile', {
+      const response = await fetch(`${API_BASE_URL}/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

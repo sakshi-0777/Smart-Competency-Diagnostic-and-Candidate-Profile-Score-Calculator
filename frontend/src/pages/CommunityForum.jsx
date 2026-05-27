@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import {
-  ArrowLeft,
+import { API_BASE_URL } from "../config";
+ArrowLeft,
   ArrowRight,
   Heart,
   Loader2,
@@ -26,8 +27,8 @@ const CommunityForum = () => {
     setLoading(true);
     try {
       const url = category === 'all'
-        ? 'http://localhost:5000/forum/posts'
-        : `http://localhost:5000/forum/posts?category=${category}`;
+        ? `${API_BASE_URL}/forum/posts`
+        : `${API_BASE_URL}/forum/posts?category=${category}`;
 
       const response = await fetch(url, {
         headers: { Authorization: `Bearer ${token}` }
@@ -43,7 +44,7 @@ const CommunityForum = () => {
   useEffect(() => {
     let isMounted = true;
 
-    fetch('http://localhost:5000/forum/categories', {
+    fetch(`${API_BASE_URL}/forum/categories`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(response => response.json())
@@ -55,8 +56,8 @@ const CommunityForum = () => {
       .catch(error => console.error('Error fetching categories:', error));
 
     const url = selectedCategory === 'all'
-      ? 'http://localhost:5000/forum/posts'
-      : `http://localhost:5000/forum/posts?category=${selectedCategory}`;
+      ? `${API_BASE_URL}/forum/posts`
+      : `${API_BASE_URL}/forum/posts?category=${selectedCategory}`;
 
     fetch(url, {
         headers: { Authorization: `Bearer ${token}` }
@@ -82,7 +83,7 @@ const CommunityForum = () => {
 
   const handleCreatePost = async () => {
     try {
-      const response = await fetch('http://localhost:5000/forum/posts', {
+      const response = await fetch(`${API_BASE_URL}/forum/posts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -105,7 +106,7 @@ const CommunityForum = () => {
     if (!newReply.trim()) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/forum/posts/${postId}/replies`, {
+      const response = await fetch(`${API_BASE_URL}/forum/posts/${postId}/replies`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -131,7 +132,7 @@ const CommunityForum = () => {
 
   const handleLikePost = async (postId) => {
     try {
-      const response = await fetch(`http://localhost:5000/forum/posts/${postId}/like`, {
+      const response = await fetch(`${API_BASE_URL}/forum/posts/${postId}/like`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` }
       });

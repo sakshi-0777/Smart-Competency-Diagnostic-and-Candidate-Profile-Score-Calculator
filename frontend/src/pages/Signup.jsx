@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import { Loader2, UserPlus } from 'lucide-react';
+import { API_BASE_URL } from "../config";
 const Signup = () => {
     const navigate = useNavigate();
   const [form, setForm] = useState({ name: "", email: "", password: "" });
@@ -12,7 +13,7 @@ const Signup = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/register", {
+      const res = await fetch(`${API_BASE_URL}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

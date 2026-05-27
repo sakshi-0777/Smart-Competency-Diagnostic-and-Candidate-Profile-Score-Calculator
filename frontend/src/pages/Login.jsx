@@ -3,7 +3,7 @@ import React, {useState} from 'react'
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../context/AuthContext';
 import { LogIn, Loader2 } from 'lucide-react';
-
+import { API_BASE_URL } from "../config";
 const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -16,7 +16,7 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/login", {
+      const res = await fetch(`${API_BASE_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

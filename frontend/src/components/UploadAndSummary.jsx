@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import { API_BASE_URL } from "../config";
 import {
   AlertCircle,
   BookOpen,
@@ -37,7 +38,7 @@ const UploadAndSummary = () => {
     setSearchResults([]);
 
     try {
-      const res = await fetch("http://localhost:5000/search_jobs", {
+      const res = await fetch(`${API_BASE_URL}/search_jobs`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query: searchQuery }),
@@ -71,7 +72,7 @@ const UploadAndSummary = () => {
     setResult(null);
 
     try {
-      const res = await fetch("http://localhost:5000/analyze_resume", {
+      const res = await fetch(`${API_BASE_URL}/analyze_resume`, {
         method: "POST",
         body: formData,
       });

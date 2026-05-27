@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import {
-  ArrowLeft,
+import { API_BASE_URL } from "../config";
+ArrowLeft,
   BookOpen,
   Check,
   Clock,
@@ -31,7 +32,7 @@ const LearningPathways = () => {
   const fetchPathways = async () => {
     try {
       setError("");
-      const response = await fetch('http://localhost:5000/learning-pathways', {
+      const response = await fetch(`${API_BASE_URL}/learning-pathways`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await response.json();
@@ -52,7 +53,7 @@ const LearningPathways = () => {
 
   const handleEnroll = async (pathwayId) => {
     try {
-      const response = await fetch(`http://localhost:5000/learning-pathways/${pathwayId}/enroll`, {
+      const response = await fetch(`${API_BASE_URL}/learning-pathways/${pathwayId}/enroll`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -67,7 +68,7 @@ const LearningPathways = () => {
 
   const handleCompleteStep = async (pathwayId, stepId) => {
     try {
-      const response = await fetch(`http://localhost:5000/learning-pathways/${pathwayId}/complete/${stepId}`, {
+      const response = await fetch(`${API_BASE_URL}/learning-pathways/${pathwayId}/complete/${stepId}`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` }
       });

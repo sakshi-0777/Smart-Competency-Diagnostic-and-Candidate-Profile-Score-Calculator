@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../context/AuthContext';
 import {
-  Download,
+Download,
   FilePlus2,
   Loader2,
   Plus,
@@ -42,7 +42,7 @@ const ResumeWizard = () => {
 
   const fetchTemplates = async () => {
     try {
-      const response = await fetch('http://localhost:5000/resume/templates', {
+      const response = await fetch(`${API_BASE_URL}/resume/templates`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await response.json();
@@ -213,7 +213,7 @@ const ResumeWizard = () => {
     setGenerating(true);
     setError('');
     try {
-      const response = await fetch('http://localhost:5000/resume/generate', {
+      const response = await fetch(`${API_BASE_URL}/resume/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
