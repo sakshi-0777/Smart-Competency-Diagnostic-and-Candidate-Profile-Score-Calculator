@@ -44,7 +44,9 @@ CORS(
         "http://127.0.0.1:5174",
         "http://127.0.0.1:5175",
         "http://127.0.0.1:5176",
-        "http://127.0.0.1:5177"
+        "http://127.0.0.1:5177",
+
+        "https://smart-competency-diagnostic-and-can.vercel.app/login"
     ]}},
     allow_headers=["Content-Type", "Authorization"],
     expose_headers=["Authorization"]
